@@ -3,15 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#55D8E4"
-    tools:context=".MovieDetailsFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    android:background="#9A5B5B"
+    tools:context=".MovieItemsFragment" >
 
     <Button
-        android:id="@+id/btnToPersonDetails"
+        android:id="@+id/btnToMovieDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Button" />
-
 </FrameLayout>

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/movieDetailsFragment"
-        android:name="com.wellbees.popularmovies.MovieDetailsFragment"
+        android:name="com.wellbees.popularmovies.ui.MovieDetailsFragment"
         android:label="fragment_movie_details"
         tools:layout="@layout/fragment_movie_details" >
         <action
@@ -20,12 +20,12 @@
     </fragment>
     <fragment
         android:id="@+id/personDetailsFragment"
-        android:name="com.wellbees.popularmovies.PersonDetailsFragment"
+        android:name="com.wellbees.popularmovies.ui.PersonDetailsFragment"
         android:label="fragment_person_details"
         tools:layout="@layout/fragment_person_details" />
     <fragment
         android:id="@+id/movieItemsFragment"
-        android:name="com.wellbees.popularmovies.MovieItemsFragment"
+        android:name="com.wellbees.popularmovies.ui.MovieItemsFragment"
         android:label="fragment_movie_items"
         tools:layout="@layout/fragment_movie_items" >
         <action

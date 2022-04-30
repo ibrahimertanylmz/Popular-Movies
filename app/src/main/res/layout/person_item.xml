@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/imagePerson"
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/round_bg"
+        android:backgroundTint="#383A3A"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Name"
+        android:textColor="#393535"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imagePerson"
+        app:layout_constraintStart_toStartOf="@+id/imagePerson"
+        app:layout_constraintTop_toBottomOf="@+id/imagePerson" />
+</androidx.constraintlayout.widget.ConstraintLayout>

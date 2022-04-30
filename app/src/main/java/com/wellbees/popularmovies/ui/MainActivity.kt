@@ -1,4 +1,4 @@
-package com.wellbees.popularmovies
+package com.wellbees.popularmovies.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

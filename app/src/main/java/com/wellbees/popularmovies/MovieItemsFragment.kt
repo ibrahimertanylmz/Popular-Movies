@@ -1,22 +1,27 @@
 package com.wellbees.popularmovies
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.wellbees.popularmovies.adapter.MovieAdapter
 import com.wellbees.popularmovies.databinding.FragmentMovieItemsBinding
 import com.wellbees.popularmovies.model.Movie
+import com.wellbees.popularmovies.model.MovieResponse
 import com.wellbees.popularmovies.model.MovieViewModel
 
 class MovieItemsFragment : Fragment() {
 
     private lateinit var binding: FragmentMovieItemsBinding
     private var movieViewModel = MovieViewModel()
+    private var movieList = ArrayList<Movie>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +38,21 @@ class MovieItemsFragment : Fragment() {
 
 
         //onTextChanged
-        movieViewModel.onSearchQuery("eve")
+
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s != null) {
+                    if (s.length > 3){
+                        movieViewModel.onSearchQuery(binding.edtSearch.text.toString())
+                    }
+                }
+            }
+        })
+
 
         movieViewModel.movieLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
             onMovieLoadingStateChanged(it)})
@@ -56,14 +75,6 @@ class MovieItemsFragment : Fragment() {
                onLoaded(it)})
 
 
-
-
-
-
-
-
-
-
             println()
         }else{
             val y = "error"
@@ -75,17 +86,14 @@ class MovieItemsFragment : Fragment() {
 
     }
 
-    fun onLoaded(movie: Movie){
-        movie.results[0].name
+    private fun onLoaded(movieResponse: MovieResponse){
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.rvMovies.layoutManager = layoutManager
+        binding.rvMovies.adapter = MovieAdapter(requireContext(), movieViewModel.getMoviesFromResponse(movieResponse), ::itemClick)
+    }
 
-        movie.results[1].name
-
-
-        movie.results[2].name
-
-
-
-
+    private fun itemClick(position: Int){
 
     }
 

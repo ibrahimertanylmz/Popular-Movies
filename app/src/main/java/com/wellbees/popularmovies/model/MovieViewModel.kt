@@ -1,61 +1,70 @@
 package com.wellbees.popularmovies.model
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wellbees.popularmovies.service.MovieApiService
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableSingleObserver
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.logging.Logger
 
 
-class MovieViewModel: ViewModel() {
+class MovieViewModel : ViewModel() {
 
     private var searchJob: Job? = null
-    var searchMoviesLiveData = MutableLiveData<Movie>()
+    var searchMoviesLiveData = MutableLiveData<MovieResponse>()
     val movieLoadingStateLiveData = MutableLiveData<String>()
 
-    fun onSearchQuery(query: String)  {
+    fun onSearchQuery(query: String) {
         viewModelScope.launch {
             if (query.length > 2) {
-                    //val liveData = MutableLiveData<List<Movie>>()
-                    viewModelScope.launch(Dispatchers.IO) {
+                //val liveData = MutableLiveData<List<Movie>>()
+                viewModelScope.launch(Dispatchers.IO) {
 
-                        try {
-                            //1
-                            withContext(Dispatchers.Main) {
-                                movieLoadingStateLiveData.value = "LOADING"
-                            }
-
-                            val movies = MovieApiService().getDataService(1,query)
-                            searchMoviesLiveData.postValue(movies)
-
-                            //2
-                            movieLoadingStateLiveData.postValue("LOADED")
-
-                            Log.d("basari","e.message.toString()")
-                            //movieLoadingStateLiveData.postValue(MovieLoadingState.LOADED)
-                        }catch (e: Exception){
-                            movieLoadingStateLiveData.postValue(e.message.toString())
-                            Log.d("hata",e.message.toString())
+                    try {
+                        //1
+                        withContext(Dispatchers.Main) {
+                            movieLoadingStateLiveData.value = "LOADING"
                         }
 
+                        val movies = MovieApiService().getDataService(1, query)
+                        searchMoviesLiveData.postValue(movies)
 
+                        //2
+                        movieLoadingStateLiveData.postValue("LOADED")
+
+                        Log.d("basari", "e.message.toString()")
+                        //movieLoadingStateLiveData.postValue(MovieLoadingState.LOADED)
+                    } catch (e: Exception) {
+                        movieLoadingStateLiveData.postValue(e.message.toString())
+                        Log.d("hata", e.message.toString())
                     }
+
+
+                }
             }
         }
     }
 
-    //private val disposable = CompositeDisposable()
+    fun getMoviesFromResponse(movieResponse: MovieResponse): ArrayList<Movie> {
+        val movieList = ArrayList<Movie>()
+        movieResponse.results.forEach {
+            val id = it.id
+            val name = it.originalTitle
+            var posterPath = ""
+            if (it.posterPath!= null){
+                posterPath = it.posterPath
+            }
+            val releaseDate = it.releaseDate
+            val movie = Movie(id, name,posterPath, releaseDate)
+            movieList.add(movie)
+        }
+        return movieList
+    }
 
+    //private val disposable = CompositeDisposable()
 
 
     /*private fun getDataFromAPI(movieName: String) {

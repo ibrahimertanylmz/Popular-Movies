@@ -1,5 +1,6 @@
 package com.wellbees.popularmovies.service
 
+import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.model.MovieResponse
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -16,6 +17,10 @@ class MovieApiService {
         .create(MovieApi::class.java)
 
     suspend fun getMovies(page: Int, query: String): MovieResponse{
-        return api.getData("39c5465cd4d393531f1e739433a8e360",page,query)
+        return api.getMovies("39c5465cd4d393531f1e739433a8e360",page,query)
+    }
+
+    suspend fun getDetailsOfMovie(movieId: Int): MovieDetailsResponse{
+        return api.getDetails(movieId,"39c5465cd4d393531f1e739433a8e360")
     }
 }

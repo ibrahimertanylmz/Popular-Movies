@@ -123,7 +123,7 @@ class MovieItemsFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.rvPeople.layoutManager = layoutManager
-        binding.rvPeople.adapter = PersonAdapter(requireContext(), personViewModel.getPeopleFromResponse(personResponse), ::itemClick)
+        binding.rvPeople.adapter = PersonAdapter(requireContext(), personViewModel.getPeopleFromResponse(personResponse), ::personItemClick)
 
 
         val x = personViewModel.getPeopleFromResponse(personResponse)
@@ -159,12 +159,24 @@ class MovieItemsFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvMovies.layoutManager = layoutManager
-        binding.rvMovies.adapter = MovieAdapter(requireContext(), movieViewModel.getMoviesFromResponse(movieResponse), ::itemClick)
+        movieList = movieViewModel.getMoviesFromResponse(movieResponse)
+        binding.rvMovies.adapter = MovieAdapter(requireContext(), movieList, ::movieItemClick) // film yuklemede hata olursa sorun burada
     }
 
-    private fun itemClick(position: Int){
+    private fun movieItemClick(position: Int){
+
+        movieList[position].id
+
+        val action =
+            MovieItemsFragmentDirections.actionMovieItemsFragmentToMovieDetailsFragment(movieList[position].id)
+        findNavController().navigate(action)
+    }
+
+    private fun personItemClick(position: Int){
 
     }
+
+
 
 }
 

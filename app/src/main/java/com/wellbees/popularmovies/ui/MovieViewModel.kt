@@ -104,28 +104,4 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
 
     }
 
-    //private val disposable = CompositeDisposable()
-
-
-    /*private fun getDataFromAPI(movieName: String) {
-        //country_load.value = true
-        disposable.add(
-            MovieApiService().getDataService(1,movieName)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<Movie>() {
-                    override fun onSuccess(t: Movie) {
-                        //country_error.value = false
-                        //country_load.value = false
-                        //country_data.value = t
-                    }
-                    override fun onError(e: Throwable) {
-                        //Log.d("MainViewModel", "onError -> $e")
-                        //country_error.value = true
-                        //country_load.value = false
-                    }
-                })
-        )
-    }*/
-
 }

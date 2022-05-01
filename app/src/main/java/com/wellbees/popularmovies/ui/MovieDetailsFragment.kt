@@ -35,7 +35,7 @@ class MovieDetailsFragment : Fragment() {
 
         binding = FragmentMovieDetailsBinding.inflate(inflater)
 
-        movieId = args.movieId
+        movieId = args.detailval
 
         val movieApiService = MovieApiService()
         viewModelFactoryMovie = MovieViewModelFactory(movieApiService)

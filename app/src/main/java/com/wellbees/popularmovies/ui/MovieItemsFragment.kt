@@ -17,7 +17,6 @@ import com.wellbees.popularmovies.adapter.PersonAdapter
 import com.wellbees.popularmovies.databinding.FragmentMovieItemsBinding
 import com.wellbees.popularmovies.model.Movie
 import com.wellbees.popularmovies.model.MovieResponse
-import com.wellbees.popularmovies.model.Person
 import com.wellbees.popularmovies.model.PersonResponse
 import com.wellbees.popularmovies.service.MovieApiService
 import com.wellbees.popularmovies.service.PersonApiService
@@ -32,7 +31,6 @@ class MovieItemsFragment : Fragment() {
     private lateinit var personViewModel: PersonViewModel
 
     private var movieList = ArrayList<Movie>()
-    private var personList = ArrayList<Person>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +79,12 @@ class MovieItemsFragment : Fragment() {
             onPersonLoadingStateChanged(it)})
 
 
+        binding.btnToMovieDetails.setOnClickListener {
+            val action =
+                MovieItemsFragmentDirections.actionMovieItemsFragmentToMovieDetailsFragment(2)
+            findNavController().navigate(action)
+        }
+
         return binding.root
     }
 
@@ -119,8 +123,16 @@ class MovieItemsFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.rvPeople.layoutManager = layoutManager
-        personList = personViewModel.getPeopleFromResponse(personResponse)
-        binding.rvPeople.adapter = PersonAdapter(requireContext(), personList, ::personItemClick) // sorun cikarsa burda
+        binding.rvPeople.adapter = PersonAdapter(requireContext(), personViewModel.getPeopleFromResponse(personResponse), ::personItemClick)
+
+
+        val x = personViewModel.getPeopleFromResponse(personResponse)
+
+
+        x
+
+        println()
+
     }
 
     private fun onMovieLoadingStateChanged(it: String) {
@@ -152,16 +164,20 @@ class MovieItemsFragment : Fragment() {
     }
 
     private fun movieItemClick(position: Int){
+
+        movieList[position].id
+
         val action =
             MovieItemsFragmentDirections.actionMovieItemsFragmentToMovieDetailsFragment(movieList[position].id)
         findNavController().navigate(action)
     }
 
     private fun personItemClick(position: Int){
-        val action =
-            MovieItemsFragmentDirections.actionMovieItemsFragmentToPersonDetailsFragment(personList[position].id)
-        findNavController().navigate(action)
+
     }
+
+
+
 }
 
 

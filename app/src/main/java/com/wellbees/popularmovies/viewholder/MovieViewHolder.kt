@@ -1,14 +1,11 @@
 package com.wellbees.popularmovies.viewholder
 
-import android.R.attr.radius
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.wellbees.popularmovies.R
 import com.wellbees.popularmovies.databinding.MovieItemBinding
 import com.wellbees.popularmovies.model.Movie
-
 
 class MovieViewHolder(
     var context: Context,
@@ -27,7 +24,6 @@ class MovieViewHolder(
     fun bindData(movie: Movie) {
         Glide.with(context)
             .load(baseUrl + movie.posterPath)
-            .transform(RoundedCorners(12))
             .placeholder(R.drawable.ic_loading)
             .error(R.drawable.ic_error_loading_image)
             .into(binding.imageMovie);

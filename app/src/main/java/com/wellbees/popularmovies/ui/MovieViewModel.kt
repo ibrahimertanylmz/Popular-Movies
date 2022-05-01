@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.wellbees.popularmovies.model.Movie
 import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.model.MovieResponse
+import com.wellbees.popularmovies.model.Person
 import com.wellbees.popularmovies.service.MovieApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,45 +16,53 @@ import kotlinx.coroutines.withContext
 
 
 class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel() {
-    private var searchJob: Job? = null
     var searchMoviesLiveData = MutableLiveData<MovieResponse>()
     var movieDetailsLiveData = MutableLiveData<MovieDetailsResponse>()
     val movieLoadingStateLiveData = MutableLiveData<String>()
     val movieDetailLoadingStateLiveData = MutableLiveData<String>()
+    private var movieList = ArrayList<Movie>()
 
     fun onSearchQuery(query: String) {
         viewModelScope.launch {
             if (query.length > 2) {
-                //val liveData = MutableLiveData<List<Movie>>()
                 viewModelScope.launch(Dispatchers.IO) {
-
                     try {
-                        //1
                         withContext(Dispatchers.Main) {
                             movieLoadingStateLiveData.value = "LOADING"
                         }
-
                         val movies = movieApiService.getMovies(1, query)
                         searchMoviesLiveData.postValue(movies)
-
-                        //2
                         movieLoadingStateLiveData.postValue("LOADED")
-
-                        Log.d("basari", "e.message.toString()")
-                        //movieLoadingStateLiveData.postValue(MovieLoadingState.LOADED)
                     } catch (e: Exception) {
                         movieLoadingStateLiveData.postValue(e.message.toString())
-                        Log.d("hata", e.message.toString())
+                        Log.d("error", e.message.toString())
                     }
-
-
                 }
             }
         }
     }
 
+    fun getDetailsByMovieId(movieId: Int) {
+        viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    withContext(Dispatchers.Main) {
+                        movieDetailLoadingStateLiveData.value = "LOADING"
+                    }
+                    val movieDetails = movieApiService.getDetailsOfMovie(movieId)
+                    movieDetailsLiveData.postValue(movieDetails)
+                    movieDetailLoadingStateLiveData.postValue("LOADED")
+                } catch (e: Exception) {
+                    movieDetailLoadingStateLiveData.postValue(e.message.toString())
+                    Log.d("error", e.message.toString())
+                }
+
+
+            }
+        }
+    }
+
     fun getMoviesFromResponse(movieResponse: MovieResponse): ArrayList<Movie> {
-        val movieList = ArrayList<Movie>()
         movieResponse.results.forEach {
             val id = it.id
             val name = it.originalTitle
@@ -63,7 +72,6 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
                 posterPath = it.posterPath
             }
             it.releaseDate?.let { rd -> releaseDate = rd }
-
             val movie = Movie(id, name)
             movie.posterPath = posterPath
             movie.releaseDate = releaseDate
@@ -72,36 +80,8 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
         return movieList
     }
 
-    fun getDetailsByMovieId(movieId: Int) {
-
-        viewModelScope.launch {
-
-            //val liveData = MutableLiveData<List<Movie>>()
-            viewModelScope.launch(Dispatchers.IO) {
-
-                try {
-                    //1
-                    withContext(Dispatchers.Main) {
-                        movieDetailLoadingStateLiveData.value = "LOADING"
-                    }
-
-                    val movieDetails = movieApiService.getDetailsOfMovie(movieId)
-                    movieDetailsLiveData.postValue(movieDetails)
-
-                    //2
-                    movieDetailLoadingStateLiveData.postValue("LOADED")
-
-                    Log.d("basari", "e.message.toString()")
-                    //movieLoadingStateLiveData.postValue(MovieLoadingState.LOADED)
-                } catch (e: Exception) {
-                    movieDetailLoadingStateLiveData.postValue(e.message.toString())
-                    Log.d("hata", e.message.toString())
-                }
-
-
-            }
-        }
-
+    fun getMovieId(position: Int): Int{
+        return movieList[position].id
     }
 
 }

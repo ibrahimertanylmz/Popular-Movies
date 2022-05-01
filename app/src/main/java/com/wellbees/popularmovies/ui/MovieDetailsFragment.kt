@@ -21,7 +21,7 @@ class MovieDetailsFragment : Fragment() {
     lateinit var viewModelFactoryMovie: ViewModelProvider.Factory
     private lateinit var movieViewModel : MovieViewModel
     private var movieId : Int = -1
-    val args: MovieDetailsFragmentArgs by navArgs()
+    private val args: MovieDetailsFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,40 +31,31 @@ class MovieDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-
         binding = FragmentMovieDetailsBinding.inflate(inflater)
 
         movieId = args.movieId
 
-        val movieApiService = MovieApiService()
-        viewModelFactoryMovie = MovieViewModelFactory(movieApiService)
-        movieViewModel = ViewModelProvider(this, viewModelFactoryMovie).get(MovieViewModel::class.java)
+        initializeViewModel()
 
         movieViewModel.getDetailsByMovieId(movieId)
-
         movieViewModel.movieDetailLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
             onMovieLoadingStateChanged(it)})
-
 
         return binding.root
     }
 
-    private fun onMovieLoadingStateChanged(it: String) {
-        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+    private fun initializeViewModel() {
+        val movieApiService = MovieApiService()
+        viewModelFactoryMovie = MovieViewModelFactory(movieApiService)
+        movieViewModel = ViewModelProvider(this, viewModelFactoryMovie).get(MovieViewModel::class.java)
+    }
 
+    private fun onMovieLoadingStateChanged(it: String) {
         if (it == "LOADED"){
             movieViewModel.movieDetailsLiveData.observe(viewLifecycleOwner, Observer {
                 onMovieDetailsLoaded(it)})
-
-
-            println()
         }else{
-            val y = "error"
 
-            Toast.makeText(requireContext(), "HATAAAAAAA", Toast.LENGTH_SHORT).show()
-
-            println()
         }
     }
 
@@ -77,13 +68,6 @@ class MovieDetailsFragment : Fragment() {
             .into(binding.detailImageMovie);
         binding.tvMovieTitle.text = movieDetailsResponse.title
         binding.tvMovieDescription.text = movieDetailsResponse.overview
-
-        if(movieDetailsResponse.video == true){
-            Toast.makeText(requireContext(), movieId, Toast.LENGTH_LONG).show()
-        }else{
-            Toast.makeText(requireContext(), "no videooooooooooooo", Toast.LENGTH_LONG).show()
-
-        }
     }
 
 }

@@ -39,9 +39,7 @@ class PersonDetailsFragment : Fragment() {
 
         personId = args.personId
 
-        val personApiService = PersonApiService()
-        viewModelFactoryPerson = PersonViewModelFactory(personApiService)
-        personViewModel = ViewModelProvider(this, viewModelFactoryPerson).get(PersonViewModel::class.java)
+        initializeViewModel()
 
         personViewModel.getPersonDetailsById(personId)
 
@@ -51,21 +49,18 @@ class PersonDetailsFragment : Fragment() {
         return binding.root
     }
 
-    private fun onPersonDetailLoadingStateChanged(it: String) {
-        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+    private fun initializeViewModel() {
+        val personApiService = PersonApiService()
+        viewModelFactoryPerson = PersonViewModelFactory(personApiService)
+        personViewModel = ViewModelProvider(this, viewModelFactoryPerson).get(PersonViewModel::class.java)
+    }
 
+    private fun onPersonDetailLoadingStateChanged(it: String) {
         if (it == "LOADED"){
             personViewModel.personDetailsLiveData.observe(viewLifecycleOwner, Observer {
                 onPersonDetailsLoaded(it)})
-
-
-            println()
         }else{
-            val y = "error"
 
-            Toast.makeText(requireContext(), "HATAAAAAAA", Toast.LENGTH_SHORT).show()
-
-            println()
         }
     }
 
@@ -77,15 +72,10 @@ class PersonDetailsFragment : Fragment() {
             .placeholder(R.drawable.ic_loading)
             .error(R.drawable.ic_error_loading_image)
             .into(binding.detailImagePerson);
-
         binding.tvPersonName.text = personDetailsResponse.name
         binding.tvMovieDescription.text = personDetailsResponse.biography
         binding.tvMovieDescription2.text = personDetailsResponse.birthday
 
-        println()
-
-        //binding.tvMovieDescription.text = movieDetailsResponse.overview
     }
-
 
 }

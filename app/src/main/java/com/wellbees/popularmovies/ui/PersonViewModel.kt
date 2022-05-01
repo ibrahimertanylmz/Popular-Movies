@@ -18,6 +18,7 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
     var personDetailsLiveData = MutableLiveData<PersonDetailResponse>()
     val personLoadingStateLiveData = MutableLiveData<String>()
     val personDetailLoadingStateLiveData = MutableLiveData<String>()
+    private var personList = ArrayList<Person>()
 
     fun onSearchQuery(query: String) {
         viewModelScope.launch {
@@ -50,24 +51,6 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
         }
     }
 
-    fun getPeopleFromResponse(personResponse: PersonResponse): ArrayList<Person> {
-        val personList = ArrayList<Person>()
-        personResponse.results.forEach {
-            val id = it.id
-            val name = it.name
-            var profilePath = ""
-
-            if(it.profilePath!= null){
-                profilePath = it.profilePath
-            }
-
-            val person = Person(id, name)
-            person.profilePath = profilePath
-            personList.add(person)
-        }
-        return personList
-    }
-
     fun getPersonDetailsById(personId: Int) {
 
         viewModelScope.launch {
@@ -98,6 +81,27 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
             }
         }
 
+    }
+
+    fun getPeopleFromResponse(personResponse: PersonResponse): ArrayList<Person> {
+        personResponse.results.forEach {
+            val id = it.id
+            val name = it.name
+            var profilePath = ""
+
+            if(it.profilePath!= null){
+                profilePath = it.profilePath
+            }
+
+            val person = Person(id, name)
+            person.profilePath = profilePath
+            personList.add(person)
+        }
+        return personList
+    }
+
+    fun getPersonId(position: Int): Int {
+        return personList[position].id
     }
 
 }

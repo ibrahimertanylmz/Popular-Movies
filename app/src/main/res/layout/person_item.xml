@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/imagePerson"
         android:layout_width="105dp"
-        android:layout_height="120dp"
+        android:layout_height="130dp"
         android:background="@drawable/round_bg"
         android:backgroundTint="#383A3A"
         android:paddingLeft="10dp"

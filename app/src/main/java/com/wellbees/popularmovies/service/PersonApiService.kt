@@ -1,6 +1,6 @@
 package com.wellbees.popularmovies.service
 
-import com.wellbees.popularmovies.model.MovieResponse
+import com.wellbees.popularmovies.model.PersonDetailResponse
 import com.wellbees.popularmovies.model.PersonResponse
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -16,6 +16,10 @@ class PersonApiService {
         .create(PersonApi::class.java)
 
     suspend fun getPeople(page: Int, query: String): PersonResponse {
-        return api.getData("39c5465cd4d393531f1e739433a8e360",page,query)
+        return api.getPeople("39c5465cd4d393531f1e739433a8e360",page,query)
+    }
+
+    suspend fun getPersonDetails(personId: Int): PersonDetailResponse{
+        return api.getPersonDetails(personId,"39c5465cd4d393531f1e739433a8e360")
     }
 }

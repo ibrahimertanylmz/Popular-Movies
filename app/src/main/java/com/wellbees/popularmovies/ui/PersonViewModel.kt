@@ -84,6 +84,7 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
     }
 
     fun getPeopleFromResponse(personResponse: PersonResponse): ArrayList<Person> {
+        personList.clear()
         personResponse.results.forEach {
             val id = it.id
             val name = it.name

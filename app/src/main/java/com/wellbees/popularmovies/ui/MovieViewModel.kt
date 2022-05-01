@@ -63,6 +63,7 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
     }
 
     fun getMoviesFromResponse(movieResponse: MovieResponse): ArrayList<Movie> {
+        movieList.clear()
         movieResponse.results.forEach {
             val id = it.id
             val name = it.originalTitle

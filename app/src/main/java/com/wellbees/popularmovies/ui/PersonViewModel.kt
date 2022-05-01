@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wellbees.popularmovies.model.Movie
-import com.wellbees.popularmovies.model.MovieResponse
-import com.wellbees.popularmovies.model.Person
-import com.wellbees.popularmovies.model.PersonResponse
+import com.wellbees.popularmovies.model.*
 import com.wellbees.popularmovies.service.PersonApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,7 +15,9 @@ import kotlinx.coroutines.withContext
 class PersonViewModel(private val personApiService: PersonApiService) : ViewModel() {
 
     var searchPeopleLiveData = MutableLiveData<PersonResponse>()
+    var personDetailsLiveData = MutableLiveData<PersonDetailResponse>()
     val personLoadingStateLiveData = MutableLiveData<String>()
+    val personDetailLoadingStateLiveData = MutableLiveData<String>()
 
     fun onSearchQuery(query: String) {
         viewModelScope.launch {
@@ -67,6 +66,38 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
             personList.add(person)
         }
         return personList
+    }
+
+    fun getPersonDetailsById(personId: Int) {
+
+        viewModelScope.launch {
+
+            //val liveData = MutableLiveData<List<Movie>>()
+            viewModelScope.launch(Dispatchers.IO) {
+
+                try {
+                    //1
+                    withContext(Dispatchers.Main) {
+                        personDetailLoadingStateLiveData.value = "LOADING"
+                    }
+
+                    val personDetails = personApiService.getPersonDetails(personId)
+                    personDetailsLiveData.postValue(personDetails)
+
+                    //2
+                    personDetailLoadingStateLiveData.postValue("LOADED")
+
+                    Log.d("basari", "e.message.toString()")
+                    //movieLoadingStateLiveData.postValue(MovieLoadingState.LOADED)
+                } catch (e: Exception) {
+                    personDetailLoadingStateLiveData.postValue(e.message.toString())
+                    Log.d("hata", e.message.toString())
+                }
+
+
+            }
+        }
+
     }
 
 }

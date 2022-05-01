@@ -56,11 +56,14 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
         personResponse.results.forEach {
             val id = it.id
             val name = it.name
-            var profilePath = it.profilePath
+            var profilePath = ""
 
+            if(it.profilePath!= null){
+                profilePath = it.profilePath
+            }
 
             val person = Person(id, name)
-            person.profilePath
+            person.profilePath = profilePath
             personList.add(person)
         }
         return personList

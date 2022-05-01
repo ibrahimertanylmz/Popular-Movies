@@ -25,7 +25,7 @@ class PersonViewHolder(
         Glide.with(context)
             .load(baseUrl + person.profilePath)
             .placeholder(R.drawable.ic_loading)
-            .error(R.drawable.ic_error_loading_image)
+            .error(R.drawable.ic_person)
             .into(binding.imagePerson);
         binding.tvName.text = person.name
     }

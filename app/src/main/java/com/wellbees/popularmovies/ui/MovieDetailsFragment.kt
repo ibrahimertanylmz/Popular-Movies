@@ -68,6 +68,8 @@ class MovieDetailsFragment : Fragment() {
             .into(binding.detailImageMovie);
         binding.tvMovieTitle.text = movieDetailsResponse.title
         binding.tvMovieDescription.text = movieDetailsResponse.overview
+        binding.tvMovieReleaseDate.text = movieDetailsResponse.releaseDate
+        binding.tvMovieRating.text = movieDetailsResponse.voteAverage.toString()
     }
 
 }

@@ -20,6 +20,7 @@ import com.wellbees.popularmovies.model.Person
 import com.wellbees.popularmovies.model.PersonResponse
 import com.wellbees.popularmovies.service.MovieApiService
 import com.wellbees.popularmovies.service.PersonApiService
+import java.util.ArrayList
 
 class MovieItemsFragment : Fragment() {
 
@@ -44,9 +45,11 @@ class MovieItemsFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s != null) {
-                    if (s.length > 3){
+                    if (s.length > 2){
                         movieViewModel.onSearchQuery(binding.edtSearch.text.toString())
                         personViewModel.onSearchQuery(binding.edtSearch.text.toString())
+                    }else{
+
                     }
                 }
             }
@@ -74,6 +77,7 @@ class MovieItemsFragment : Fragment() {
 
     private fun onPersonLoadingStateChanged(it: String?) {
         if (it == "LOADED"){
+            binding.textPeople.visibility = View.VISIBLE
             personViewModel.searchPeopleLiveData.observe(viewLifecycleOwner, Observer {
                 onPersonLoaded(it)
             })
@@ -83,10 +87,22 @@ class MovieItemsFragment : Fragment() {
     }
 
     private fun onPersonLoaded(personResponse: PersonResponse) {
+        val peopleList =  personViewModel.getPeopleFromResponse(personResponse)
+        updateViewsForPeople(peopleList)
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.rvPeople.layoutManager = layoutManager
-        binding.rvPeople.adapter = PersonAdapter(requireContext(), personViewModel.getPeopleFromResponse(personResponse), ::personItemClick)
+        binding.rvPeople.adapter = PersonAdapter(requireContext(), peopleList, ::personItemClick)
+    }
+
+    private fun updateViewsForPeople(peopleList: ArrayList<Person>) {
+        if (peopleList.size == 0){
+            binding.textPeople.visibility = View.GONE
+            binding.rvPeople.visibility = View.GONE
+        }else{
+            binding.textPeople.visibility = View.VISIBLE
+            binding.rvPeople.visibility = View.VISIBLE
+        }
     }
 
     private fun onMovieLoadingStateChanged(it: String) {
@@ -101,10 +117,22 @@ class MovieItemsFragment : Fragment() {
     }
 
     private fun onMovieLoaded(movieResponse: MovieResponse){
+        val movieList = movieViewModel.getMoviesFromResponse(movieResponse)
+        updateViewsForMovies(movieList)
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvMovies.layoutManager = layoutManager
-        binding.rvMovies.adapter = MovieAdapter(requireContext(), movieViewModel.getMoviesFromResponse(movieResponse), ::movieItemClick)
+        binding.rvMovies.adapter = MovieAdapter(requireContext(), movieList, ::movieItemClick)
+    }
+
+    private fun updateViewsForMovies(movieList: ArrayList<Movie>) {
+        if (movieList.size == 0){
+            binding.textMovies.visibility = View.GONE
+            binding.rvMovies.visibility = View.GONE
+        }else{
+            binding.textMovies.visibility = View.VISIBLE
+            binding.rvMovies.visibility = View.VISIBLE
+        }
     }
 
     private fun movieItemClick(position: Int){

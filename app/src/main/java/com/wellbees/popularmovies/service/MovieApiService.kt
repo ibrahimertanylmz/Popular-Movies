@@ -1,5 +1,7 @@
 package com.wellbees.popularmovies.service
 
+import com.wellbees.popularmovies.model.CastResponse
+import com.wellbees.popularmovies.model.GenreResponse
 import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.model.MovieResponse
 import retrofit2.Retrofit
@@ -22,5 +24,13 @@ class MovieApiService {
 
     suspend fun getDetailsOfMovie(movieId: Int): MovieDetailsResponse{
         return api.getDetails(movieId,"39c5465cd4d393531f1e739433a8e360")
+    }
+
+    suspend fun getCastOfMovie(movieId: Int): CastResponse{
+        return api.getCast(movieId)
+    }
+
+    suspend fun getGenres(): GenreResponse {
+        return api.getGenres()
     }
 }

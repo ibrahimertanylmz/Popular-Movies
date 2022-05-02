@@ -14,10 +14,8 @@ import com.wellbees.popularmovies.R
 import com.wellbees.popularmovies.databinding.FragmentPersonDetailsBinding
 import com.wellbees.popularmovies.model.PersonDetailResponse
 import com.wellbees.popularmovies.service.PersonApiService
-import com.wellbees.popularmovies.ui.PersonDetailsFragmentArgs
 import com.wellbees.popularmovies.ui.viewmodel.PersonViewModel
 import com.wellbees.popularmovies.ui.base.PersonViewModelFactory
-
 
 class PersonDetailsFragment : Fragment() {
 

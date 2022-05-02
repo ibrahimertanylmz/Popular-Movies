@@ -18,7 +18,6 @@ import com.wellbees.popularmovies.databinding.FragmentMovieItemsBinding
 import com.wellbees.popularmovies.model.*
 import com.wellbees.popularmovies.service.MovieApiService
 import com.wellbees.popularmovies.service.PersonApiService
-import com.wellbees.popularmovies.ui.MovieItemsFragmentDirections
 import com.wellbees.popularmovies.ui.viewmodel.MovieViewModel
 import com.wellbees.popularmovies.ui.viewmodel.PersonViewModel
 import com.wellbees.popularmovies.ui.base.MovieViewModelFactory

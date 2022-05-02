@@ -17,8 +17,6 @@ import com.wellbees.popularmovies.databinding.FragmentMovieDetailsBinding
 import com.wellbees.popularmovies.model.CastResponse
 import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.service.MovieApiService
-import com.wellbees.popularmovies.ui.MovieDetailsFragmentArgs
-import com.wellbees.popularmovies.ui.MovieDetailsFragmentDirections
 import com.wellbees.popularmovies.ui.viewmodel.MovieViewModel
 import com.wellbees.popularmovies.ui.base.MovieViewModelFactory
 

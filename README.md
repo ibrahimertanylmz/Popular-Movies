@@ -3,7 +3,7 @@ app for wellbees
 
 *Used Technologies*
 * ViewBinding
-* MVVM Architecture
+* MVVM
 * ViewModel
 * LiveData
 * Coroutines

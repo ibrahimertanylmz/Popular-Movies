@@ -1,6 +1,5 @@
 package com.wellbees.popularmovies.viewholder
 
-import android.R.attr.radius
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,7 +15,7 @@ class MovieViewHolder(
     var itemClick: (position: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    val baseUrl : String = "https://image.tmdb.org/t/p/original/"
+    val baseUrl: String = "https://image.tmdb.org/t/p/original/"
 
     init {
         itemView.setOnClickListener {

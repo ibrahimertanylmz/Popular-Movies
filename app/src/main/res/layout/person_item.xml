@@ -26,7 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Name"
+        android:text="@string/text_name"
         android:textColor="#FFFFFF"
         android:textSize="13sp"
         android:textStyle="bold"

@@ -2,7 +2,7 @@ package com.wellbees.popularmovies.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PersonResponse (
+data class PersonResponse(
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")

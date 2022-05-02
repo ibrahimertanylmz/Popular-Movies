@@ -1,4 +1,4 @@
-package com.wellbees.popularmovies.ui
+package com.wellbees.popularmovies.ui.view
 
 import android.os.Bundle
 import android.text.Editable
@@ -18,12 +18,16 @@ import com.wellbees.popularmovies.databinding.FragmentMovieItemsBinding
 import com.wellbees.popularmovies.model.*
 import com.wellbees.popularmovies.service.MovieApiService
 import com.wellbees.popularmovies.service.PersonApiService
+import com.wellbees.popularmovies.ui.viewmodel.MovieViewModel
+import com.wellbees.popularmovies.ui.viewmodel.PersonViewModel
+import com.wellbees.popularmovies.ui.base.MovieViewModelFactory
+import com.wellbees.popularmovies.ui.base.PersonViewModelFactory
 
 class MovieItemsFragment : Fragment() {
 
     private lateinit var binding: FragmentMovieItemsBinding
     lateinit var viewModelFactoryMovie: ViewModelProvider.Factory
-    private lateinit var movieViewModel : MovieViewModel
+    private lateinit var movieViewModel: MovieViewModel
     lateinit var viewModelFactoryPerson: ViewModelProvider.Factory
     private lateinit var personViewModel: PersonViewModel
 
@@ -34,19 +38,25 @@ class MovieItemsFragment : Fragment() {
         binding = FragmentMovieItemsBinding.inflate(inflater)
 
         initializeViewModels()
+        initializeSearchEvents()
+        observeLiveDatas()
 
+        return binding.root
+    }
+
+    private fun initializeSearchEvents() {
         binding.edtSearch.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) { }
+            override fun afterTextChanged(s: Editable?) {}
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s != null) {
-                    if (s.length > 2){
+                    if (s.length > 2) {
                         movieViewModel.onSearchQuery(binding.edtSearch.text.toString())
                         personViewModel.onSearchQuery(binding.edtSearch.text.toString())
                         movieViewModel.getGenres()
-                    }else{
+                    } else {
                         updateViewsForMovies(0)
                         updateViewsForPeople(0)
                         updateViewsForGenre(0)
@@ -54,64 +64,69 @@ class MovieItemsFragment : Fragment() {
                 }
             }
         })
+    }
 
-
+    private fun observeLiveDatas() {
         movieViewModel.movieLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
-            onMovieLoadingStateChanged(it)})
+            onMovieLoadingStateChanged(it)
+        })
 
         personViewModel.personLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
-            onPersonLoadingStateChanged(it)})
+            onPersonLoadingStateChanged(it)
+        })
 
         movieViewModel.genreLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
-            onGenreLoadingStateChanged(it)})
-
-
-        return binding.root
+            onGenreLoadingStateChanged(it)
+        })
     }
 
     private fun initializeViewModels() {
         val movieApiService = MovieApiService()
         viewModelFactoryMovie = MovieViewModelFactory(movieApiService)
-        movieViewModel = ViewModelProvider(this, viewModelFactoryMovie).get(MovieViewModel::class.java)
+        movieViewModel =
+            ViewModelProvider(this, viewModelFactoryMovie).get(MovieViewModel::class.java)
         val personApiService = PersonApiService()
         viewModelFactoryPerson = PersonViewModelFactory(personApiService)
-        personViewModel = ViewModelProvider(this, viewModelFactoryPerson).get(PersonViewModel::class.java)
+        personViewModel =
+            ViewModelProvider(this, viewModelFactoryPerson).get(PersonViewModel::class.java)
     }
 
     private fun onPersonLoadingStateChanged(it: String?) {
-        if (it == "LOADED"){
+        if (it == "LOADED") {
             binding.textPeople.visibility = View.VISIBLE
             personViewModel.searchPeopleLiveData.observe(viewLifecycleOwner, Observer {
                 onPersonLoaded(it)
             })
-        }else{
+        } else {
 
         }
     }
 
     private fun onMovieLoadingStateChanged(it: String) {
-        if (it == "LOADED"){
-           movieViewModel.searchMoviesLiveData.observe(viewLifecycleOwner, Observer {
-               onMovieLoaded(it)})
+        if (it == "LOADED") {
+            movieViewModel.searchMoviesLiveData.observe(viewLifecycleOwner, Observer {
+                onMovieLoaded(it)
+            })
             println()
-        }else{
+        } else {
 
         }
-
     }
 
     private fun onGenreLoadingStateChanged(it: String) {
-        if (it == "LOADED"){
+        if (it == "LOADED") {
             movieViewModel.genreLiveData.observe(viewLifecycleOwner, Observer {
-                onGenreLoaded(it)})
+                onGenreLoaded(it)
+            })
             println()
-        }else{
+        } else {
 
         }
     }
 
     private fun onGenreLoaded(genreResponse: GenreResponse) {
-        val genreList =  movieViewModel.getFilteredGenreList(genreResponse, binding.edtSearch.text.toString())
+        val genreList =
+            movieViewModel.getFilteredGenreList(genreResponse, binding.edtSearch.text.toString())
         updateViewsForGenre(genreList.size)
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -120,7 +135,7 @@ class MovieItemsFragment : Fragment() {
     }
 
     private fun onPersonLoaded(personResponse: PersonResponse) {
-        val peopleList =  personViewModel.getPeopleFromResponse(personResponse)
+        val peopleList = personViewModel.getPeopleFromResponse(personResponse)
         updateViewsForPeople(peopleList.size)
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -128,7 +143,7 @@ class MovieItemsFragment : Fragment() {
         binding.rvPeople.adapter = PersonAdapter(requireContext(), peopleList, ::personItemClick)
     }
 
-    private fun onMovieLoaded(movieResponse: MovieResponse){
+    private fun onMovieLoaded(movieResponse: MovieResponse) {
         val movieList = movieViewModel.getMoviesFromResponse(movieResponse)
         updateViewsForMovies(movieList.size)
         val layoutManager = LinearLayoutManager(requireContext())
@@ -138,44 +153,48 @@ class MovieItemsFragment : Fragment() {
     }
 
     private fun updateViewsForGenre(size: Int) {
-        if (size == 0){
+        if (size == 0) {
             binding.textGenre.visibility = View.GONE
             binding.rvGenre.visibility = View.GONE
-        }else{
+        } else {
             binding.textGenre.visibility = View.VISIBLE
             binding.rvGenre.visibility = View.VISIBLE
         }
     }
 
     private fun updateViewsForPeople(size: Int) {
-        if (size == 0){
+        if (size == 0) {
             binding.textPeople.visibility = View.GONE
             binding.rvPeople.visibility = View.GONE
-        }else{
+        } else {
             binding.textPeople.visibility = View.VISIBLE
             binding.rvPeople.visibility = View.VISIBLE
         }
     }
 
     private fun updateViewsForMovies(size: Int) {
-        if (size == 0){
+        if (size == 0) {
             binding.textMovies.visibility = View.GONE
             binding.rvMovies.visibility = View.GONE
-        }else{
+        } else {
             binding.textMovies.visibility = View.VISIBLE
             binding.rvMovies.visibility = View.VISIBLE
         }
     }
 
-    private fun movieItemClick(position: Int){
+    private fun movieItemClick(position: Int) {
         val action =
-            MovieItemsFragmentDirections.actionMovieItemsFragmentToMovieDetailsFragment(movieViewModel.getMovieId(position))
+            MovieItemsFragmentDirections.actionMovieItemsFragmentToMovieDetailsFragment(
+                movieViewModel.getMovieId(position)
+            )
         findNavController().navigate(action)
     }
 
-    private fun personItemClick(position: Int){
+    private fun personItemClick(position: Int) {
         val action =
-            MovieItemsFragmentDirections.actionMovieItemsFragmentToPersonDetailsFragment(personViewModel.getPersonId(position))
+            MovieItemsFragmentDirections.actionMovieItemsFragmentToPersonDetailsFragment(
+                personViewModel.getPersonId(position)
+            )
         findNavController().navigate(action)
     }
 }

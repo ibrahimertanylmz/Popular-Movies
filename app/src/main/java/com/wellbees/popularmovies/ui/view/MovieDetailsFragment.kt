@@ -1,11 +1,10 @@
-package com.wellbees.popularmovies.ui
+package com.wellbees.popularmovies.ui.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -18,18 +17,16 @@ import com.wellbees.popularmovies.databinding.FragmentMovieDetailsBinding
 import com.wellbees.popularmovies.model.CastResponse
 import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.service.MovieApiService
+import com.wellbees.popularmovies.ui.viewmodel.MovieViewModel
+import com.wellbees.popularmovies.ui.base.MovieViewModelFactory
 
 class MovieDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentMovieDetailsBinding
     lateinit var viewModelFactoryMovie: ViewModelProvider.Factory
-    private lateinit var movieViewModel : MovieViewModel
-    private var movieId : Int = -1
+    private lateinit var movieViewModel: MovieViewModel
+    private var movieId: Int = -1
     private val args: MovieDetailsFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,30 +37,35 @@ class MovieDetailsFragment : Fragment() {
         movieId = args.movieId
 
         initializeViewModel()
-
-        movieViewModel.getDetailsByMovieId(movieId)
-        movieViewModel.movieDetailLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
-            onMovieLoadingStateChanged(it)})
-
-        movieViewModel.getCastOfMovie(movieId)
-        movieViewModel.castLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
-            onCastLoadingStateChanged(it)})
-
+        initializeObservers()
 
         return binding.root
     }
 
+    private fun initializeObservers() {
+        movieViewModel.getDetailsByMovieId(movieId)
+        movieViewModel.movieDetailLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
+            onMovieLoadingStateChanged(it)
+        })
+
+        movieViewModel.getCastOfMovie(movieId)
+        movieViewModel.castLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
+            onCastLoadingStateChanged(it)
+        })
+    }
+
     private fun onCastLoadingStateChanged(it: String) {
-        if (it == "LOADED"){
+        if (it == "LOADED") {
             movieViewModel.castLiveData.observe(viewLifecycleOwner, Observer {
-                onCastLoaded(it)})
-        }else{
+                onCastLoaded(it)
+            })
+        } else {
 
         }
     }
 
     private fun onCastLoaded(castResponse: CastResponse) {
-        val cast =  movieViewModel.getCastFromResponse(castResponse)
+        val cast = movieViewModel.getCastFromResponse(castResponse)
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.rvCast.layoutManager = layoutManager
@@ -73,20 +75,22 @@ class MovieDetailsFragment : Fragment() {
     private fun initializeViewModel() {
         val movieApiService = MovieApiService()
         viewModelFactoryMovie = MovieViewModelFactory(movieApiService)
-        movieViewModel = ViewModelProvider(this, viewModelFactoryMovie).get(MovieViewModel::class.java)
+        movieViewModel =
+            ViewModelProvider(this, viewModelFactoryMovie).get(MovieViewModel::class.java)
     }
 
     private fun onMovieLoadingStateChanged(it: String) {
-        if (it == "LOADED"){
+        if (it == "LOADED") {
             movieViewModel.movieDetailsLiveData.observe(viewLifecycleOwner, Observer {
-                onMovieDetailsLoaded(it)})
-        }else{
+                onMovieDetailsLoaded(it)
+            })
+        } else {
 
         }
     }
 
     private fun onMovieDetailsLoaded(movieDetailsResponse: MovieDetailsResponse) {
-        val baseUrl : String = "https://image.tmdb.org/t/p/original/"
+        val baseUrl: String = "https://image.tmdb.org/t/p/original/"
         Glide.with(requireActivity())
             .load(baseUrl + movieDetailsResponse.posterPath)
             .placeholder(R.drawable.ic_loading)
@@ -100,7 +104,9 @@ class MovieDetailsFragment : Fragment() {
 
     private fun castItemClick(position: Int) {
         val action =
-            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToPersonDetailsFragment(movieViewModel.getPersonIdFromCast(position))
+            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToPersonDetailsFragment(
+                movieViewModel.getPersonIdFromCast(position)
+            )
         findNavController().navigate(action)
     }
 

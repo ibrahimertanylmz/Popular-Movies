@@ -8,10 +8,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.wellbees.popularmovies.R
+import com.wellbees.popularmovies.adapter.PersonAdapter
 import com.wellbees.popularmovies.databinding.FragmentMovieDetailsBinding
+import com.wellbees.popularmovies.model.CastResponse
 import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.service.MovieApiService
 
@@ -41,7 +45,29 @@ class MovieDetailsFragment : Fragment() {
         movieViewModel.movieDetailLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
             onMovieLoadingStateChanged(it)})
 
+        movieViewModel.getCastOfMovie(movieId)
+        movieViewModel.castLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
+            onCastLoadingStateChanged(it)})
+
+
         return binding.root
+    }
+
+    private fun onCastLoadingStateChanged(it: String) {
+        if (it == "LOADED"){
+            movieViewModel.castLiveData.observe(viewLifecycleOwner, Observer {
+                onCastLoaded(it)})
+        }else{
+
+        }
+    }
+
+    private fun onCastLoaded(castResponse: CastResponse) {
+        val cast =  movieViewModel.getCastFromResponse(castResponse)
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        binding.rvCast.layoutManager = layoutManager
+        binding.rvCast.adapter = PersonAdapter(requireContext(), cast, ::castItemClick)
     }
 
     private fun initializeViewModel() {
@@ -70,6 +96,12 @@ class MovieDetailsFragment : Fragment() {
         binding.tvMovieDescription.text = movieDetailsResponse.overview
         binding.tvMovieReleaseDate.text = movieDetailsResponse.releaseDate
         binding.tvMovieRating.text = movieDetailsResponse.voteAverage.toString()
+    }
+
+    private fun castItemClick(position: Int) {
+        val action =
+            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToPersonDetailsFragment(movieViewModel.getPersonIdFromCast(position))
+        findNavController().navigate(action)
     }
 
 }

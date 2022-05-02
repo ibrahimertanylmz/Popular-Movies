@@ -1,5 +1,7 @@
 package com.wellbees.popularmovies.service
 
+import com.wellbees.popularmovies.model.CastResponse
+import com.wellbees.popularmovies.model.GenreResponse
 import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.model.MovieResponse
 import retrofit2.http.GET
@@ -21,5 +23,16 @@ interface MovieApi {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = "39c5465cd4d393531f1e739433a8e360",
     ): MovieDetailsResponse
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getCast(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = "39c5465cd4d393531f1e739433a8e360",
+    ): CastResponse
+
+    @GET("genre/movie/list")
+    suspend fun getGenres(
+        @Query("api_key") apiKey: String = "39c5465cd4d393531f1e739433a8e360",
+    ): GenreResponse
 
 }

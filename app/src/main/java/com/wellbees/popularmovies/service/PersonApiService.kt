@@ -16,10 +16,10 @@ class PersonApiService {
         .create(PersonApi::class.java)
 
     suspend fun getPeople(page: Int, query: String): PersonResponse {
-        return api.getPeople("39c5465cd4d393531f1e739433a8e360",page,query)
+        return api.getPeople("39c5465cd4d393531f1e739433a8e360", page, query)
     }
 
-    suspend fun getPersonDetails(personId: Int): PersonDetailResponse{
-        return api.getPersonDetails(personId,"39c5465cd4d393531f1e739433a8e360")
+    suspend fun getPersonDetails(personId: Int): PersonDetailResponse {
+        return api.getPersonDetails(personId)
     }
 }

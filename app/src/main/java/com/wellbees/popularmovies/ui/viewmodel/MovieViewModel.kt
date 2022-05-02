@@ -1,4 +1,4 @@
-package com.wellbees.popularmovies.ui
+package com.wellbees.popularmovies.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.wellbees.popularmovies.model.*
 import com.wellbees.popularmovies.service.MovieApiService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -63,7 +62,7 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
         }
     }
 
-    fun getCastOfMovie(movieId: Int){
+    fun getCastOfMovie(movieId: Int) {
         viewModelScope.launch {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
@@ -82,7 +81,7 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
         }
     }
 
-    fun getGenres(){
+    fun getGenres() {
         viewModelScope.launch {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
@@ -105,7 +104,7 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
     fun getFilteredGenreList(genreResponse: GenreResponse, genre: String): ArrayList<Genre> {
         val filteredList = ArrayList<Genre>()
         genreResponse.genres.forEach {
-            if (it.name.contains(genre,ignoreCase = true)){
+            if (it.name.contains(genre, ignoreCase = true)) {
                 filteredList.add(it)
             }
         }
@@ -131,18 +130,18 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
         return movieList
     }
 
-    fun getMovieId(position: Int): Int{
+    fun getMovieId(position: Int): Int {
         return movieList[position].id
     }
 
-    fun getCastFromResponse(castResponse: CastResponse): ArrayList<Person>{
+    fun getCastFromResponse(castResponse: CastResponse): ArrayList<Person> {
         cast.clear()
         castResponse.cast.forEach {
             val id = it.id
             val name = it.name
             var profilePath = ""
 
-            if(it.profilePath!= null){
+            if (it.profilePath != null) {
                 profilePath = it.profilePath
             }
 
@@ -153,7 +152,7 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
         return cast
     }
 
-    fun getPersonIdFromCast(position: Int): Int{
+    fun getPersonIdFromCast(position: Int): Int {
         return cast[position].id
     }
 

@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wellbees.popularmovies.databinding.GenreItemBinding
 import com.wellbees.popularmovies.model.Genre
 import com.wellbees.popularmovies.viewholder.GenreViewHolder
-import com.wellbees.popularmovies.viewholder.PersonViewHolder
 
-class GenreAdapter (
+class GenreAdapter(
     var context: Context,
     var liste: ArrayList<Genre>
 ) : RecyclerView.Adapter<GenreViewHolder>() {

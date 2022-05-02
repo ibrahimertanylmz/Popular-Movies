@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#131313"
-    tools:context=".ui.MovieItemsFragment">
+    tools:context=".ui.view.MovieItemsFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#131313"
-            tools:context=".ui.MovieItemsFragment">
+            tools:context=".ui.view.MovieItemsFragment">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMovies"

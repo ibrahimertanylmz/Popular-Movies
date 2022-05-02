@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#131313"
-    tools:context=".ui.MovieDetailsFragment">
+    tools:context=".ui.view.MovieDetailsFragment">
 
     <ScrollView
         android:layout_width="0dp"
@@ -46,7 +46,7 @@
 
 
             <TextView
-                android:id="@+id/tvMovieDescription"
+                android:id="@+id/tvPersonDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -59,7 +59,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvPersonName" />
 
             <TextView
-                android:id="@+id/tvMovieDescription2"
+                android:id="@+id/tvPersonBiography"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -69,7 +69,7 @@
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvMovieDescription" />
+                app:layout_constraintTop_toBottomOf="@+id/tvPersonDate" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

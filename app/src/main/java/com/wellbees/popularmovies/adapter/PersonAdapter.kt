@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wellbees.popularmovies.databinding.PersonItemBinding
 import com.wellbees.popularmovies.model.Person
-import com.wellbees.popularmovies.viewholder.MovieViewHolder
 import com.wellbees.popularmovies.viewholder.PersonViewHolder
 
 class PersonAdapter(

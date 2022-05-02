@@ -13,3 +13,7 @@ app for wellbees
 * Retrofit
 * RxJava
 * Glide
+
+- Possible Updates: Loading, Loaded kısmı enum kullanılarak yapılabilir
+- Repository eklenebilir (gerekli mi?)
+- PersonDetails sayfasından oyuncunun filmleri listelenip bu sayfadan da filmlere yönlendirme yapılabilir.

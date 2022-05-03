@@ -89,6 +89,7 @@ class MovieDetailsFragment : Fragment() {
         }else{
             Toast.makeText(requireContext(), "Trailer is not available", Toast.LENGTH_SHORT).show()
             binding.youtubePlayerView.visibility = View.GONE
+            binding.textTrailer.visibility = View.GONE
         }
     }
 

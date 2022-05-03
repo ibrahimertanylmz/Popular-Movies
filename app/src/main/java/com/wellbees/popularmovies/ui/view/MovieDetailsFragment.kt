@@ -87,7 +87,6 @@ class MovieDetailsFragment : Fragment() {
         if (movieTrailerResponse.trailers.lastIndex>=0){
             initializeYoutubePlayer(movieTrailerResponse.trailers.get(movieTrailerResponse.trailers.lastIndex).key)
         }else{
-            Toast.makeText(requireContext(), "Trailer is not available", Toast.LENGTH_SHORT).show()
             binding.youtubePlayerView.visibility = View.GONE
             binding.textTrailer.visibility = View.GONE
         }

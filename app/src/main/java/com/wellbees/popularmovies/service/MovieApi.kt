@@ -1,9 +1,6 @@
 package com.wellbees.popularmovies.service
 
-import com.wellbees.popularmovies.model.CastResponse
-import com.wellbees.popularmovies.model.GenreResponse
-import com.wellbees.popularmovies.model.MovieDetailsResponse
-import com.wellbees.popularmovies.model.MovieResponse
+import com.wellbees.popularmovies.model.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -32,5 +29,11 @@ interface MovieApi {
     suspend fun getGenres(
         @Query("api_key") apiKey: String = "39c5465cd4d393531f1e739433a8e360",
     ): GenreResponse
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getVideos(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = "39c5465cd4d393531f1e739433a8e360",
+    ): MovieTrailerResponse
 
 }

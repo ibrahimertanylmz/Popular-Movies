@@ -5,17 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.wellbees.popularmovies.R
 import com.wellbees.popularmovies.adapter.PersonAdapter
 import com.wellbees.popularmovies.databinding.FragmentMovieDetailsBinding
 import com.wellbees.popularmovies.model.CastResponse
 import com.wellbees.popularmovies.model.MovieDetailsResponse
+import com.wellbees.popularmovies.model.MovieTrailerResponse
 import com.wellbees.popularmovies.service.MovieApiService
 import com.wellbees.popularmovies.ui.viewmodel.MovieViewModel
 import com.wellbees.popularmovies.ui.base.MovieViewModelFactory
@@ -52,6 +56,11 @@ class MovieDetailsFragment : Fragment() {
         movieViewModel.castLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
             onCastLoadingStateChanged(it)
         })
+
+        movieViewModel.getTrailerByMovieId(movieId)
+        movieViewModel.trailerLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
+            onTrailerLoadingStateChanged(it)
+        })
     }
 
     private fun onCastLoadingStateChanged(it: String) {
@@ -61,6 +70,25 @@ class MovieDetailsFragment : Fragment() {
             })
         } else {
 
+        }
+    }
+
+    private fun onTrailerLoadingStateChanged(it: String) {
+        if (it == "LOADED") {
+            movieViewModel.trailerLiveData.observe(viewLifecycleOwner, Observer {
+                onTrailerLoaded(it)
+            })
+        } else {
+
+        }
+    }
+
+    private fun onTrailerLoaded(movieTrailerResponse: MovieTrailerResponse) {
+        if (movieTrailerResponse.trailers.lastIndex>=0){
+            initializeYoutubePlayer(movieTrailerResponse.trailers.get(movieTrailerResponse.trailers.lastIndex).key)
+        }else{
+            Toast.makeText(requireContext(), "Trailer is not available", Toast.LENGTH_SHORT).show()
+            binding.youtubePlayerView.visibility = View.GONE
         }
     }
 
@@ -77,6 +105,15 @@ class MovieDetailsFragment : Fragment() {
         viewModelFactoryMovie = MovieViewModelFactory(movieApiService)
         movieViewModel =
             ViewModelProvider(this, viewModelFactoryMovie).get(MovieViewModel::class.java)
+    }
+
+    private fun initializeYoutubePlayer(videoId: String) {
+        lifecycle.addObserver(binding.youtubePlayerView)
+        binding.youtubePlayerView.addYouTubePlayerListener(object: AbstractYouTubePlayerListener(){
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                youTubePlayer.cueVideo(videoId, 0F)
+            }
+        })
     }
 
     private fun onMovieLoadingStateChanged(it: String) {

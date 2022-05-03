@@ -16,10 +16,12 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
     var movieDetailsLiveData = MutableLiveData<MovieDetailsResponse>()
     var castLiveData = MutableLiveData<CastResponse>()
     var genreLiveData = MutableLiveData<GenreResponse>()
+    var trailerLiveData = MutableLiveData<MovieTrailerResponse>()
     val movieLoadingStateLiveData = MutableLiveData<String>()
     val movieDetailLoadingStateLiveData = MutableLiveData<String>()
     val castLoadingStateLiveData = MutableLiveData<String>()
     val genreLoadingStateLiveData = MutableLiveData<String>()
+    val trailerLoadingStateLiveData = MutableLiveData<String>()
     private var movieList = ArrayList<Movie>()
     private val cast = ArrayList<Person>()
     private val genreList = ArrayList<Genre>()
@@ -56,6 +58,24 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
                     movieDetailLoadingStateLiveData.postValue("LOADED")
                 } catch (e: Exception) {
                     movieDetailLoadingStateLiveData.postValue(e.message.toString())
+                    Log.d("error", e.message.toString())
+                }
+            }
+        }
+    }
+
+    fun getTrailerByMovieId(movieId: Int) {
+        viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    withContext(Dispatchers.Main) {
+                        trailerLoadingStateLiveData.value = "LOADING"
+                    }
+                    val movieVideos = movieApiService.getVideos(movieId)
+                    trailerLiveData.postValue(movieVideos)
+                    trailerLoadingStateLiveData.postValue("LOADED")
+                } catch (e: Exception) {
+                    trailerLoadingStateLiveData.postValue(e.message.toString())
                     Log.d("error", e.message.toString())
                 }
             }

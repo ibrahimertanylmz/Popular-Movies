@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.wellbees.popularmovies.R
 import com.wellbees.popularmovies.databinding.FragmentPersonDetailsBinding
+import com.wellbees.popularmovies.model.LoadState
 import com.wellbees.popularmovies.model.PersonDetailResponse
 import com.wellbees.popularmovies.service.PersonApiService
 import com.wellbees.popularmovies.ui.viewmodel.PersonViewModel
@@ -53,8 +54,8 @@ class PersonDetailsFragment : Fragment() {
             ViewModelProvider(this, viewModelFactoryPerson).get(PersonViewModel::class.java)
     }
 
-    private fun onPersonDetailLoadingStateChanged(it: String) {
-        if (it == "LOADED") {
+    private fun onPersonDetailLoadingStateChanged(it: LoadState) {
+        if (it == LoadState.Loaded) {
             personViewModel.personDetailsLiveData.observe(viewLifecycleOwner, Observer {
                 onPersonDetailsLoaded(it)
             })

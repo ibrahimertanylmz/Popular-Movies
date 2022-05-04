@@ -15,8 +15,8 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
 
     var searchPeopleLiveData = MutableLiveData<PersonResponse>()
     var personDetailsLiveData = MutableLiveData<PersonDetailResponse>()
-    val personLoadingStateLiveData = MutableLiveData<String>()
-    val personDetailLoadingStateLiveData = MutableLiveData<String>()
+    val personLoadingStateLiveData = MutableLiveData<LoadState>()
+    val personDetailLoadingStateLiveData = MutableLiveData<LoadState>()
     private var personList = ArrayList<Person>()
 
     fun onSearchQuery(query: String) {
@@ -25,13 +25,13 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
                 viewModelScope.launch(Dispatchers.IO) {
                     try {
                         withContext(Dispatchers.Main) {
-                            personLoadingStateLiveData.value = "LOADING"
+                            personLoadingStateLiveData.value = LoadState.Loading
                         }
                         val movies = personApiService.getPeople(1, query)
                         searchPeopleLiveData.postValue(movies)
-                        personLoadingStateLiveData.postValue("LOADED")
+                        personLoadingStateLiveData.postValue(LoadState.Loaded)
                     } catch (e: Exception) {
-                        personLoadingStateLiveData.postValue(e.message.toString())
+                        personLoadingStateLiveData.postValue(LoadState.Error)
                         Log.d("exception", e.message.toString())
                     }
                 }
@@ -44,13 +44,13 @@ class PersonViewModel(private val personApiService: PersonApiService) : ViewMode
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     withContext(Dispatchers.Main) {
-                        personDetailLoadingStateLiveData.value = "LOADING"
+                        personDetailLoadingStateLiveData.value = LoadState.Loading
                     }
                     val personDetails = personApiService.getPersonDetails(personId)
                     personDetailsLiveData.postValue(personDetails)
-                    personDetailLoadingStateLiveData.postValue("LOADED")
+                    personDetailLoadingStateLiveData.postValue(LoadState.Loaded)
                 } catch (e: Exception) {
-                    personDetailLoadingStateLiveData.postValue(e.message.toString())
+                    personDetailLoadingStateLiveData.postValue(LoadState.Error)
                     Log.d("exception", e.message.toString())
                 }
             }

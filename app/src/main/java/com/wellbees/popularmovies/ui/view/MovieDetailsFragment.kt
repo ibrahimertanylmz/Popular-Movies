@@ -18,6 +18,7 @@ import com.wellbees.popularmovies.R
 import com.wellbees.popularmovies.adapter.PersonAdapter
 import com.wellbees.popularmovies.databinding.FragmentMovieDetailsBinding
 import com.wellbees.popularmovies.model.CastResponse
+import com.wellbees.popularmovies.model.LoadState
 import com.wellbees.popularmovies.model.MovieDetailsResponse
 import com.wellbees.popularmovies.model.MovieTrailerResponse
 import com.wellbees.popularmovies.service.MovieApiService
@@ -63,8 +64,8 @@ class MovieDetailsFragment : Fragment() {
         })
     }
 
-    private fun onCastLoadingStateChanged(it: String) {
-        if (it == "LOADED") {
+    private fun onCastLoadingStateChanged(it: LoadState) {
+        if (it == LoadState.Loaded) {
             movieViewModel.castLiveData.observe(viewLifecycleOwner, Observer {
                 onCastLoaded(it)
             })
@@ -73,8 +74,8 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
-    private fun onTrailerLoadingStateChanged(it: String) {
-        if (it == "LOADED") {
+    private fun onTrailerLoadingStateChanged(it: LoadState) {
+        if (it == LoadState.Loaded) {
             movieViewModel.trailerLiveData.observe(viewLifecycleOwner, Observer {
                 onTrailerLoaded(it)
             })
@@ -116,8 +117,8 @@ class MovieDetailsFragment : Fragment() {
         })
     }
 
-    private fun onMovieLoadingStateChanged(it: String) {
-        if (it == "LOADED") {
+    private fun onMovieLoadingStateChanged(it: LoadState) {
+        if (it == LoadState.Loaded) {
             movieViewModel.movieDetailsLiveData.observe(viewLifecycleOwner, Observer {
                 onMovieDetailsLoaded(it)
             })

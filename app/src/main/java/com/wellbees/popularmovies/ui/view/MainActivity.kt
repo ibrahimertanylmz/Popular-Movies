@@ -9,6 +9,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        binding.btnBack.setOnClickListener {
+            onBackPressed()
+        }
+
         setContentView(binding.root)
     }
 }

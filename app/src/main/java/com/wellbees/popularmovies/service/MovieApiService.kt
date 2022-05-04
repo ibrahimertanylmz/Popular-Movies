@@ -1,9 +1,6 @@
 package com.wellbees.popularmovies.service
 
-import com.wellbees.popularmovies.model.CastResponse
-import com.wellbees.popularmovies.model.GenreResponse
-import com.wellbees.popularmovies.model.MovieDetailsResponse
-import com.wellbees.popularmovies.model.MovieResponse
+import com.wellbees.popularmovies.model.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -31,5 +28,9 @@ class MovieApiService {
 
     suspend fun getGenres(): GenreResponse {
         return api.getGenres()
+    }
+
+    suspend fun getVideos(movieId: Int): MovieTrailerResponse{
+        return api.getVideos(movieId)
     }
 }

@@ -91,8 +91,8 @@ class MovieItemsFragment : Fragment() {
             ViewModelProvider(this, viewModelFactoryPerson).get(PersonViewModel::class.java)
     }
 
-    private fun onPersonLoadingStateChanged(it: String?) {
-        if (it == "LOADED") {
+    private fun onPersonLoadingStateChanged(it: LoadState?) {
+        if (it == LoadState.Loaded) {
             binding.textPeople.visibility = View.VISIBLE
             personViewModel.searchPeopleLiveData.observe(viewLifecycleOwner, Observer {
                 onPersonLoaded(it)
@@ -102,8 +102,8 @@ class MovieItemsFragment : Fragment() {
         }
     }
 
-    private fun onMovieLoadingStateChanged(it: String) {
-        if (it == "LOADED") {
+    private fun onMovieLoadingStateChanged(it: LoadState) {
+        if (it == LoadState.Loaded) {
             movieViewModel.searchMoviesLiveData.observe(viewLifecycleOwner, Observer {
                 onMovieLoaded(it)
             })
@@ -113,8 +113,8 @@ class MovieItemsFragment : Fragment() {
         }
     }
 
-    private fun onGenreLoadingStateChanged(it: String) {
-        if (it == "LOADED") {
+    private fun onGenreLoadingStateChanged(it: LoadState) {
+        if (it == LoadState.Loaded) {
             movieViewModel.genreLiveData.observe(viewLifecycleOwner, Observer {
                 onGenreLoaded(it)
             })

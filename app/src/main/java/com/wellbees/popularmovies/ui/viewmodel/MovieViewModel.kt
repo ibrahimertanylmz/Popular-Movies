@@ -16,10 +16,12 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
     var movieDetailsLiveData = MutableLiveData<MovieDetailsResponse>()
     var castLiveData = MutableLiveData<CastResponse>()
     var genreLiveData = MutableLiveData<GenreResponse>()
-    val movieLoadingStateLiveData = MutableLiveData<String>()
-    val movieDetailLoadingStateLiveData = MutableLiveData<String>()
-    val castLoadingStateLiveData = MutableLiveData<String>()
-    val genreLoadingStateLiveData = MutableLiveData<String>()
+    var trailerLiveData = MutableLiveData<MovieTrailerResponse>()
+    val movieLoadingStateLiveData = MutableLiveData<LoadState>()
+    val movieDetailLoadingStateLiveData = MutableLiveData<LoadState>()
+    val castLoadingStateLiveData = MutableLiveData<LoadState>()
+    val genreLoadingStateLiveData = MutableLiveData<LoadState>()
+    val trailerLoadingStateLiveData = MutableLiveData<LoadState>()
     private var movieList = ArrayList<Movie>()
     private val cast = ArrayList<Person>()
     private val genreList = ArrayList<Genre>()
@@ -30,13 +32,13 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
                 viewModelScope.launch(Dispatchers.IO) {
                     try {
                         withContext(Dispatchers.Main) {
-                            movieLoadingStateLiveData.value = "LOADING"
+                            movieLoadingStateLiveData.value = LoadState.Loading
                         }
                         val movies = movieApiService.getMovies(1, query)
                         searchMoviesLiveData.postValue(movies)
-                        movieLoadingStateLiveData.postValue("LOADED")
+                        movieLoadingStateLiveData.postValue(LoadState.Loaded)
                     } catch (e: Exception) {
-                        movieLoadingStateLiveData.postValue(e.message.toString())
+                        movieLoadingStateLiveData.postValue(LoadState.Error)
                         Log.d("error", e.message.toString())
                     }
                 }
@@ -49,13 +51,31 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     withContext(Dispatchers.Main) {
-                        movieDetailLoadingStateLiveData.value = "LOADING"
+                        movieDetailLoadingStateLiveData.value = LoadState.Loading
                     }
                     val movieDetails = movieApiService.getDetailsOfMovie(movieId)
                     movieDetailsLiveData.postValue(movieDetails)
-                    movieDetailLoadingStateLiveData.postValue("LOADED")
+                    movieDetailLoadingStateLiveData.postValue(LoadState.Loaded)
                 } catch (e: Exception) {
-                    movieDetailLoadingStateLiveData.postValue(e.message.toString())
+                    movieDetailLoadingStateLiveData.postValue(LoadState.Error)
+                    Log.d("error", e.message.toString())
+                }
+            }
+        }
+    }
+
+    fun getTrailerByMovieId(movieId: Int) {
+        viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    withContext(Dispatchers.Main) {
+                        trailerLoadingStateLiveData.value = LoadState.Loading
+                    }
+                    val movieVideos = movieApiService.getVideos(movieId)
+                    trailerLiveData.postValue(movieVideos)
+                    trailerLoadingStateLiveData.postValue(LoadState.Loaded)
+                } catch (e: Exception) {
+                    trailerLoadingStateLiveData.postValue(LoadState.Error)
                     Log.d("error", e.message.toString())
                 }
             }
@@ -67,13 +87,13 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     withContext(Dispatchers.Main) {
-                        castLoadingStateLiveData.value = "LOADING"
+                        castLoadingStateLiveData.value = LoadState.Loading
                     }
                     val cast = movieApiService.getCastOfMovie(movieId)
                     castLiveData.postValue(cast)
-                    castLoadingStateLiveData.postValue("LOADED")
+                    castLoadingStateLiveData.postValue(LoadState.Loaded)
                 } catch (e: Exception) {
-                    castLoadingStateLiveData.postValue(e.message.toString())
+                    castLoadingStateLiveData.postValue(LoadState.Error)
                     Log.d("error", e.message.toString())
                     println()
                 }
@@ -86,14 +106,14 @@ class MovieViewModel(private val movieApiService: MovieApiService) : ViewModel()
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     withContext(Dispatchers.Main) {
-                        genreLoadingStateLiveData.value = "LOADING"
+                        genreLoadingStateLiveData.value = LoadState.Loading
                     }
                     genreList.clear()
                     val genreResponse = movieApiService.getGenres()
                     genreLiveData.postValue(genreResponse)
-                    genreLoadingStateLiveData.postValue("LOADED")
+                    genreLoadingStateLiveData.postValue(LoadState.Loaded)
                 } catch (e: Exception) {
-                    genreLoadingStateLiveData.postValue(e.message.toString())
+                    genreLoadingStateLiveData.postValue(LoadState.Error)
                     Log.d("error", e.message.toString())
                     println()
                 }
